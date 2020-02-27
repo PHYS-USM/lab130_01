@@ -2,10 +2,10 @@
 #include "Vocab_US_Large.h"
 #include "Vocab_Special.h"
 
-const int pin_Tachometer = 10;
+const int pin_Tachometer = 9;
 const int pin_Led_On = 8;
 const int pin_Led_Off = 6;
-const int pin_Buzzer = 3;
+const int pin_buzzer = 11;
 const int pin_Reset = 7;
 const int pin_Talk = 5;
 
@@ -28,13 +28,11 @@ void loop(){
   tac_value = digitalRead(pin_Tachometer);
   counterReset(&counter, pin_Reset, pin_buzzer);
   
- if(digitalRead(pin_Talk) == LOW) {
+ if(digitalRead(pin_Talk) == HIGH) {
   if (tac_value == HIGH && tac_flag == 0) {
-      Serial.print("A   ");
+      Serial.println("A   ");
       digitalWrite(pin_Led_On, HIGH);
       digitalWrite(pin_Led_Off, LOW);
-      Serial.print("Counter: ");
-      Serial.println(counter);
       tac_flag = 1;
       counterReset(&counter, pin_Reset, pin_buzzer);
       
@@ -50,15 +48,15 @@ void loop(){
       counterReset(&counter, pin_Reset, pin_buzzer);
   }
   delay(5);
- } else if (digitalRead(pin_Talk) == HIGH) {
+ } else if (digitalRead(pin_Talk) == LOW) {
   sayNumber(counter);
   delay(5);
- } 
+ }
 }
 
 void counterReset(int *counter, int pin_Reset, int pin_buzzer) {
   int cValue = digitalRead(pin_Reset); 
-  if (cValue == HIGH) {
+  if (cValue == LOW) {
       *counter = 0;
       tone(pin_buzzer, 300, 50);
       delay(100);
